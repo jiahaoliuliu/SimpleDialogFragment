@@ -17,6 +17,7 @@ import android.view.Window;
 public class LoadingDialog extends DialogFragment {
 
 	private boolean isDialogShownBool;
+	private int numberDialogShowRequest;
 
 	public LoadingDialog() {
 		// Empty constructor required for DialogFragment
@@ -39,6 +40,7 @@ public class LoadingDialog extends DialogFragment {
 			result = super.show(transaction, tag);
 			isDialogShownBool = true;
 		}
+		numberDialogShowRequest++;
 		return result;
 	}
 	
@@ -48,15 +50,32 @@ public class LoadingDialog extends DialogFragment {
 			super.show(manager, tag);
 			isDialogShownBool = true;
 		}
+		numberDialogShowRequest++;
 	}
 	
 	@Override
 	public void dismiss() {
-		if (isDialogShownBool) {
-			super.dismiss();
+		numberDialogShowRequest--;
+		if (numberDialogShowRequest <= 0) {
+			if (isDialogShownBool) {
+				super.dismiss();
+				isDialogShownBool = false;
+			}
+			numberDialogShowRequest = 0;
 		}
 	}
 	
+	/**
+	 * Method used to force dismiss the loading dialog, no matter the number
+	 * of requests
+	 */
+	public void dismissForce() {
+		numberDialogShowRequest = 0;
+		if (isDialogShownBool) {
+			super.dismiss();
+			isDialogShownBool = false;
+		}
+	}
 	/**
 	 * Check if the dialog is being shown
 	 * @return true  if the dialog is shown
@@ -66,9 +85,16 @@ public class LoadingDialog extends DialogFragment {
 		return isDialogShownBool;
 	}
 	
+	public int getNumberDialogShowRequest() {
+		return numberDialogShowRequest;
+	}
+
 	@Override
 	public void onCancel(DialogInterface dialog) {
 		super.onCancel(dialog);
+		
+		// Restart the values
 		isDialogShownBool = false;
+		numberDialogShowRequest = 0;
 	}
 }

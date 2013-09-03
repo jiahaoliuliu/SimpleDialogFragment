@@ -26,6 +26,11 @@ public class BaseActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				loadingDialog.show(fm, "loadingFragmentDialog");
+				loadingDialog.show(fm, "loadingFragmentDialog");
+				loadingDialog.show(fm, "loadingFragmentDialog");
+				loadingDialog.show(fm, "loadingFragmentDialog");
+				loadingDialog.show(fm, "loadingFragmentDialog");
+				loadingDialog.show(fm, "loadingFragmentDialog");
 			}
 		});
 		
@@ -34,7 +39,11 @@ public class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		// Dismiss once. It is not enough
 		loadingDialog.dismiss();
+
+		// Force dismiss the loading dialog
+		loadingDialog.dismissForce();
 	}
 
 }
